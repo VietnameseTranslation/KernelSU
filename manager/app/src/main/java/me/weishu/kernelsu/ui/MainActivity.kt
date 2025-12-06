@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
@@ -234,6 +236,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun BottomBar(navController: NavHostController) {
     val navigator = navController.rememberDestinationsNavigator()
+    val activity = LocalActivity.current
     val isManager = Natives.isManager
     val fullFeatured = isManager && !Natives.requireNewKernel() && rootAvailable()
     val bottomBarRoutes = remember {
@@ -279,9 +282,20 @@ private fun BottomBar(navController: NavHostController) {
     }
 }
 
+    BackHandler {
+        if (pagerState.currentPage != 0) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(0)
+            }
+        } else {
+            activity?.finishAndRemoveTask()
+        }
+    }
+
 @Composable
 private fun SideBar(navController: NavHostController, modifier: Modifier = Modifier) {
     val navigator = navController.rememberDestinationsNavigator()
+    val activity = LocalActivity.current
     val isManager = Natives.isManager
     val fullFeatured = isManager && !Natives.requireNewKernel() && rootAvailable()
     val bottomBarRoutes = remember {
@@ -331,3 +345,13 @@ private fun SideBar(navController: NavHostController, modifier: Modifier = Modif
         }
     }
 }
+
+    BackHandler {
+        if (pagerState.currentPage != 0) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(0)
+            }
+        } else {
+            activity?.finishAndRemoveTask()
+        }
+    }
