@@ -1,8 +1,8 @@
 #!/bin/bash
 
 word1="com"
-word2="kowx712"
-word3="supermanager"
+word2="cafes"
+word3="xksu"
 
 # Export variables for use in find -exec
 export word1 word2 word3
